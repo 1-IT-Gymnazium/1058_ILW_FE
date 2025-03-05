@@ -1,55 +1,74 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from "vue";
 
-const getData = (method, url, id) => {
-  return fetch(`${url}${id}`, {
-      method: method,
-      headers: { "Content-Type": "application/json" },
-  }).then(response => {
-      if (!response.ok) {
-          return response.json().then(errorData => {
-              throw new Error(`Chyba ${response.status}: ${JSON.stringify(errorData)}`);
-          });
-      }
-      return response.json();
-  });
-};
+const tableRows = ref([]);
+const isLoading = ref(false);
+const errorMessage = ref("");
+const isicId = ref("");
 
-const meals = ref([]);
-const users = ref([]);
-
-async function fetchMeals() {
-  try {
-    const mealsData = await getData("GET", "http://127.0.0.1:8000/meals/", "1");
-    const usersData = await getData("GET", "http://127.0.0.1:8000/users/", "ahoj");
-    
-    //udělat na array
-    meals.value = Array.isArray(mealsData) ? mealsData : mealsData.results || [];
-    users.value = Array.isArray(usersData) ? usersData : usersData.results || [];
-
-    console.log("Meal data:", meals.value);
-    console.log("User data:", users.value);
-  } catch (error) {
-    console.error("Error:", error);
+const fetchMealData = async () => {
+  if (!isicId.value) {
+    errorMessage.value = "Prosím, vyplňte ISIC ID.";
+    return;
   }
-}
 
-// Propojení jídel s uživateli
-const mealsWithUsers = computed(() => {
-  return Array.isArray(meals.value)
-    ? meals.value.map(meal => ({
-        ...meal,
-        user: users.value.find(user => user.id === meal.user_id) || { name: "Neznámý", user_number: "N/A" }
-      }))
-    : [];
-});
+  isLoading.value = true;
+  errorMessage.value = "";
+
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/users/meals-info/${encodeURIComponent(isicId.value)}`
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Chyba ${response.status}: ${errorData.detail}`);
+    }
+
+    const data = await response.json();
+    console.log("Načtená data:", data);
+
+    // Přidání nového záznamu do tabulky
+    const newRow = {
+      user_name: data.user_name || "",
+      meal_number: data.meal_number || "",
+      meal_name: data.meal_name || "",
+      user_number: data.user_number || "",
+    };
+
+    tableRows.value.unshift(newRow);
+
+    // Udržení maximálně 6 řádků v tabulce
+    if (tableRows.value.length > 6) {
+      tableRows.value.pop();
+    }
+
+  } catch (error) {
+    errorMessage.value = error.message;
+    console.error("Chyba při načítání dat:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 </script>
+
 
 <template>
   <body>
     <h1>Seznam obědů</h1>
-    <button @click="fetchMeals" class="btn">Načíst</button>
-    <table>
+
+    <div class="input-group">
+      <label for="isicId">ISIC ID:</label>
+      <input v-model="isicId" type="text" id="isicId" required />
+    </div>
+
+    <button @click="fetchMealData" class="btn" :disabled="isLoading">
+      {{ isLoading ? "Načítání..." : "Načíst" }}
+    </button>
+
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+
+    <table v-if="tableRows.length">
       <thead>
         <tr>
           <th>Jméno studenta</th>
@@ -59,11 +78,11 @@ const mealsWithUsers = computed(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="meal in mealsWithUsers" :key="meal.id">
-          <td>{{ meal.user.name }}</td>
-          <td>{{ meal.meal_number }}</td>
-          <td>{{ meal.name }}</td>
-          <td>{{ meal.user.user_number }}</td>
+        <tr v-for="(row, index) in tableRows" :key="index" :class="{ highlight: index === 0 }">
+          <td>{{ row.user_name }}</td>
+          <td>{{ row.meal_number }}</td>
+          <td>{{ row.meal_name }}</td>
+          <td>{{ row.user_number }}</td>
         </tr>
       </tbody>
     </table>
@@ -76,6 +95,23 @@ body {
     font-family: Arial, sans-serif;
     margin: 20px;
     background-color: #f8f9fa;
+}
+
+.input-group {
+    margin-bottom: 10px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 button.btn {
@@ -92,14 +128,15 @@ button.btn:hover {
     background-color: #333;
 }
 
-.status {
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: bold;
+button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
 }
 
-.status .online {
-    color: #28a745;
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
 table {
