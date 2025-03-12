@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const tableRows = ref([]);
 const isLoading = ref(false);
@@ -28,7 +28,6 @@ const fetchMealData = async () => {
     const data = await response.json();
     console.log("Načtená data:", data);
 
-    // Přidání nového záznamu do tabulky
     const newRow = {
       user_name: data.user_name || "",
       meal_number: data.meal_number || "",
@@ -38,7 +37,6 @@ const fetchMealData = async () => {
 
     tableRows.value.unshift(newRow);
 
-    // Udržení maximálně 6 řádků v tabulce
     if (tableRows.value.length > 6) {
       tableRows.value.pop();
     }
@@ -48,27 +46,34 @@ const fetchMealData = async () => {
     console.error("Chyba při načítání dat:", error);
   } finally {
     isLoading.value = false;
+    isicId.value = ""; 
   }
 };
-</script>
 
+const handleKeyPress = (event) => {
+  if (event.key === "Enter") {
+    fetchMealData();
+  } else {
+    isicId.value += event.key;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeyPress);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", handleKeyPress);
+});
+</script>
 
 <template>
   <body>
     <h1>Seznam obědů</h1>
 
-    <div class="input-group">
-      <label for="isicId">ISIC ID:</label>
-      <input v-model="isicId" type="text" id="isicId" required />
-    </div>
-
-    <button @click="fetchMealData" class="btn" :disabled="isLoading">
-      {{ isLoading ? "Načítání..." : "Načíst" }}
-    </button>
-
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
-    <table v-if="tableRows.length">
+    <table>
       <thead>
         <tr>
           <th>Jméno studenta</th>
@@ -89,48 +94,11 @@ const fetchMealData = async () => {
   </body>
 </template>
 
-
 <style scoped>
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
     background-color: #f8f9fa;
-}
-
-.input-group {
-    margin-bottom: 10px;
-}
-
-.input-group label {
-    display: block;
-    font-weight: bold;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-button.btn {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-button.btn:hover {
-    background-color: #333;
-}
-
-button:disabled {
-    background-color: #999;
-    cursor: not-allowed;
 }
 
 .error {

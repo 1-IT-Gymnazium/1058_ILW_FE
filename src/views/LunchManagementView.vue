@@ -1,5 +1,5 @@
 <script setup>
-import LunchManagement from '@/components/lunchManagement.vue';
+import LunchManagement from '@/components/LunchManagement.vue'
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <template>
     <div>
-      <button @click="login" class="login-btn">Log in</button>
+      <button @click="logout" class="logout-btn">Log out</button>
     </div>
   </template>
   <script>
@@ -8,11 +8,11 @@
   
     export default {
       setup() {
-        const { loginWithRedirect } = useAuth0();
+        const { logout } = useAuth0();
   
         return {
-          login: () => {
-            loginWithRedirect();
+          logout: () => {
+            logout({ logoutParams: { returnTo: window.location.origin } });
           }
         };
       }
@@ -20,7 +20,7 @@
   </script>
 
 <style scoped>
-.login-btn {
+.logout-btn {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -32,7 +32,7 @@
   border-radius: 5px;
 }
 
-.login-btn:hover {
+.logout-btn:hover {
   background: #333;
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useAuth0 } from '@auth0/auth0-vue';
 
 // Dynamické proměnné pro název a číslo oběda
 const mealName = ref("Název oběda");
@@ -25,6 +26,12 @@ const donateMeal = () => {
   studentNumber.value = "";
 };
 
+
+const { logout } = useAuth0();
+
+const handleLogout = () => {
+  logout({ logoutParams: { returnTo: window.location.origin } });
+};
 // Načíst data o obědě při načtení stránky
 onMounted(fetchMealInfo);
 </script>
@@ -36,7 +43,7 @@ onMounted(fetchMealInfo);
 
     <!-- Hlavní obsah -->
     <div class="content">
-      <button class="logout-btn">Odhlásit</button>
+      <button class="logout-btn" @click="handleLogout">Odhlásit</button>
       <h1 class="meal-name">"{{ mealName }}"</h1>
       <p class="meal-number">"{{ mealNumber }}"</p>
 
