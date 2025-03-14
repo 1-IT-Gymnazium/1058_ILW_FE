@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import LunchListView from './views/LunchListView.vue';
 </script>
 
 <template>
@@ -8,7 +9,6 @@ import { RouterLink, RouterView } from 'vue-router'
     <div>
 
       <nav>
-
       </nav>
     </div>
   </header>
