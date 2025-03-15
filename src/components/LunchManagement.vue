@@ -1,8 +1,5 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useAuth0 } from '@auth0/auth0-vue';
-
-const { isAuthenticated, loginWithRedirect } = useAuth0();
 
 const mealName = ref("Název oběda");
 const mealNumber = ref("1");
@@ -40,7 +37,7 @@ const donateMeal = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 90vh;
   position: relative;
   overflow: hidden;
   background-color: #f8f8f8;

@@ -3,10 +3,8 @@ import Logout from '@/components/Logout.vue';
 import LunchManagement from '@/components/LunchManagement.vue'
 import { useAuth0 } from "@auth0/auth0-vue";
 import { onMounted } from "vue";
-import { useRouter } from "vue-router";
 
 const { isAuthenticated, loginWithRedirect } = useAuth0();
-const router = useRouter();
 
 onMounted(() => {
   if (!isAuthenticated.value) {
@@ -120,19 +118,6 @@ onMounted(() => {
   justify-content: center;
   height: 40px;
   min-width: 80px;
-}
-
-.logout-container button {
-  background: black;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 @media (max-width: 768px) {

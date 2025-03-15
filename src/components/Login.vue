@@ -1,6 +1,7 @@
 <template>
     <div>
-      <button @click="login" class="login-btn">Log in</button>
+      <button @click="login" class="login-btn">Přihlásit
+      </button>
     </div>
   </template>
   <script>

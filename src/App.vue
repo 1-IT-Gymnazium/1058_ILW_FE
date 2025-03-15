@@ -1,18 +1,16 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import LunchListView from './views/LunchListView.vue';
+import HomePageView from './views/HomePageView.vue';
 </script>
 
 <template>
   <header>
-
-    <div>
-
       <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/lunchList">Lunches</RouterLink>
+        <RouterLink to="/lunchManagement">Student UI</RouterLink>
       </nav>
-    </div>
   </header>
-
   <RouterView />
 </template>
 
