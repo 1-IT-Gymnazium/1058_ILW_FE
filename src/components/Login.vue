@@ -5,24 +5,30 @@
     </div>
   </template>
   <script>
-    import { useAuth0 } from '@auth0/auth0-vue';
-  
-    export default {
-      setup() {
-        const { loginWithRedirect } = useAuth0();
-  
-        return {
-          login: () => {
-            loginWithRedirect();
-          }
-        };
+import { useAuth0 } from '@auth0/auth0-vue';
+
+export default {
+  /**
+   * Vue.js component handling user login with Auth0.
+   *
+   * :returns: Login function to initiate Auth0 redirect authentication.
+   */
+  setup() {
+    const { loginWithRedirect } = useAuth0();
+
+    return {
+      login: () => {
+        loginWithRedirect();
       }
     };
+  }
+};
+
   </script>
 
 <style scoped>
+
 .login-btn {
-  position: absolute;
   top: 10px;
   left: 10px;
   background: black;

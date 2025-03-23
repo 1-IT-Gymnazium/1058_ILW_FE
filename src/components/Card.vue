@@ -9,6 +9,15 @@
 import { useAuth0 } from "@auth0/auth0-vue";
 
 export default {
+  /**
+   * Vue.js component utilizing Auth0 for authentication state management.
+   *
+   * :param title: The title prop, expected as a string.
+   * :param link: The link prop, expected as a string.
+   * :param image: The image prop, expected as a string.
+   *
+   * :returns: Authentication state through Auth0.
+   */
   props: {
     title: String,
     link: String,

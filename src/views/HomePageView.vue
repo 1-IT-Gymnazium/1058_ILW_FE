@@ -4,13 +4,16 @@ import Login from "@/components/Login.vue";
 import Logout from "@/components/Logout.vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 
-
+/**
+ * Vue.js component integrating Auth0 authentication with Card, Login, and Logout components.
+ *
+ * :returns: Object containing authentication state and registered components.
+ */
 export default {
   components: {
     Card,
     Login,
     Logout,
-    
   },
   setup() {
     const { isAuthenticated } = useAuth0();
@@ -22,15 +25,9 @@ export default {
 
 <template>
     <div class="container">
-        <div v-if="!isAuthenticated" class="login-container" >
-            <Login />
-        </div>
-        <div v-else class="login-container" >
-            <Logout />
-        </div>
       <h1 class="title">Inteligent Lunch Withdrawal</h1>
       <div class="cards">
-        <Card title="Student UI" link="/lunchManagement" image="/src/assets/User-Icon.webp"/>
+        <Card title="Správa obědů" link="/lunchManagement" image="/src/assets/User-Icon.webp"/>
         <Card title="List obědů" link="/lunchList" image="/src/assets/lunch-icon.png"/>
       </div>
       <p class="description">Systém pro inteligentní výdej obědů pomocí ISIC</p>
@@ -38,7 +35,6 @@ export default {
   </template>
   
   <style scoped>
-
 .login-container {
   position: absolute;
   top: 20px;
@@ -75,7 +71,7 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 90vh;
+    min-height: 85vh;
     width: 100%;
     background-color: #f4f4f4;
     color: #333;

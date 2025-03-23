@@ -1,23 +1,27 @@
 <script setup>
-import Logout from '@/components/Logout.vue';
-import LunchManagement from '@/components/LunchManagement.vue'
+import LunchManagement from '@/components/LunchManagement.vue';
 import { useAuth0 } from "@auth0/auth0-vue";
 import { onMounted } from "vue";
 
 const { isAuthenticated, loginWithRedirect } = useAuth0();
 
+/**
+ * Initializes authentication state and redirects authenticated users.
+ *
+ * :raises Redirect: Redirects authenticated users to login via Auth0.
+ */
 onMounted(() => {
   if (!isAuthenticated.value) {
     loginWithRedirect();
   }
 });
+
 </script>
 
 <template>
   <main>
     <div v-if="isAuthenticated">
       <LunchManagement />
-      <div class="logout-container"> <Logout/></div>
     </div>
     <div v-else class="newtons-cradle">
         <div class="newtons-cradle__dot"></div>
@@ -110,7 +114,7 @@ onMounted(() => {
 
 .logout-container {
   position: absolute;
-  top: 175px;
+  top: 33vh;
   right: 20px;
   padding: 10px 20px;
   display: flex;

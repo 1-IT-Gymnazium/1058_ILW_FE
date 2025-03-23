@@ -4,8 +4,53 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 const tableRows = ref([]);
 const isLoading = ref(false);
 const errorMessage = ref("");
+const infoMessage = ref("");
 const isicId = ref("");
+const user_id = ref();
+const meal_id = ref();
 
+/**
+ * Aktualizuje stav objednávky na `status: false` a nastaví `withdrawed_at` na aktuální čas.
+ *
+ * :param userNumber: Číslo studenta, podle kterého se vyhledá objednávka.
+ * :type userNumber: number
+ * :returns: Promise bez návratové hodnoty, pouze aktualizace na serveru.
+ * :rtype: Promise<void>
+ * :raises Error: Pokud dojde k chybě při komunikaci s API.
+ */
+const updateOrderStatus = async (userNumber) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/orders/${userNumber}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: user_id.value,
+        meal_id: meal_id.value,
+        status: false,
+        withdrawed_at: new Date().toISOString()
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Nepodařilo se aktualizovat stav objednávky.");
+    }
+
+    console.log(`Objednávka studenta ${userNumber} aktualizována na status: false`);
+  } catch (error) {
+    console.error("Chyba při updatu objednávky:", error);
+  }
+};
+
+/**
+ * Načte informace o jídle podle ISIC ID a rozhodne, zda se má zobrazit v tabulce.
+ * Pokud `status === false`, vypíše hlášku a záznam nezobrazí.
+ *
+ * :returns: Promise bez návratové hodnoty. Data se ukládají do `tableRows`.
+ * :rtype: Promise<void>
+ * :raises Error: Pokud nastane chyba při komunikaci s API.
+ */
 const fetchMealData = async () => {
   if (!isicId.value) {
     errorMessage.value = "Prosím, vyplňte ISIC ID.";
@@ -14,6 +59,7 @@ const fetchMealData = async () => {
 
   isLoading.value = true;
   errorMessage.value = "";
+  infoMessage.value = "";
 
   try {
     const response = await fetch(
@@ -26,7 +72,14 @@ const fetchMealData = async () => {
     }
 
     const data = await response.json();
-    console.log("Načtená data:", data);
+
+    // Pokud má status false, nezobrazujeme jídlo a jen informujeme uživatele
+    if (data.order_status === false) {
+      infoMessage.value = `Uživatel ${data.user_name} už si oběd vyzvedl.`;
+    }
+
+    meal_id.value = data.meal_id;
+    user_id.value = data.user_id;
 
     const newRow = {
       user_name: data.user_name || "",
@@ -36,6 +89,7 @@ const fetchMealData = async () => {
     };
 
     tableRows.value.unshift(newRow);
+    await updateOrderStatus(data.user_number);
 
     if (tableRows.value.length > 6) {
       tableRows.value.pop();
@@ -46,10 +100,17 @@ const fetchMealData = async () => {
     console.error("Chyba při načítání dat:", error);
   } finally {
     isLoading.value = false;
-    isicId.value = ""; 
+    isicId.value = "";
   }
 };
 
+/**
+ * Zpracuje stisk klávesy – pokud je to Enter, spustí fetchMealData,
+ * jinak přidává stisknuté znaky do `isicId` vstupu.
+ *
+ * :param event: Událost stisknutí klávesy.
+ * :type event: KeyboardEvent
+ */
 const handleKeyPress = (event) => {
   if (event.key === "Enter") {
     fetchMealData();
@@ -58,20 +119,28 @@ const handleKeyPress = (event) => {
   }
 };
 
+/**
+ * Při načtení komponenty naslouchá na stisk klávesy.
+ */
 onMounted(() => {
   window.addEventListener("keydown", handleKeyPress);
 });
 
+/**
+ * Při odpojení komponenty odebere posluchač klávesnice.
+ */
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", handleKeyPress);
 });
 </script>
+
 
 <template>
   <body>
     <h1>Seznam obědů</h1>
 
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+    <p v-if="infoMessage" class="info">{{ infoMessage }}</p>
 
     <table>
       <thead>
@@ -97,7 +166,7 @@ onBeforeUnmount(() => {
 <style scoped>
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 20px 0;
     background-color: #f8f9fa;
 }
 
@@ -137,5 +206,11 @@ tr.highlight {
 
 tr.highlight td {
     font-weight: bold;
+}
+
+.info {
+  color: #555;
+  font-style: italic;
+  margin-top: 10px;
 }
 </style>
