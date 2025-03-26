@@ -9,20 +9,33 @@
 import { useAuth0 } from "@auth0/auth0-vue";
 
 export default {
+  name: "CardLink",
+
   /**
-   * Vue.js component utilizing Auth0 for authentication state management.
-   *
-   * :param title: The title prop, expected as a string.
-   * :param link: The link prop, expected as a string.
-   * :param image: The image prop, expected as a string.
-   *
-   * :returns: Authentication state through Auth0.
+   * Props přijaté komponentou.
+   * @property {string} title - Název, který se zobrazí jako titulek karty.
+   * @property {string} link - Cílový odkaz, kam komponenta přesměruje po kliknutí.
+   * @property {string} [image] - (Volitelné) Cesta k obrázku, který se zobrazí na kartě.
    */
   props: {
-    title: String,
-    link: String,
-    image: String
+    title: {
+      type: String,
+      required: true
+    },
+    link: {
+      type: String,
+      required: true
+    },
+    image: {
+      type: String,
+      required: false
+    }
   },
+
+  /**
+   * Setup funkce využívající Auth0 hook pro získání informací o autentizaci.
+   * @returns {Object} Obsahuje reaktivní proměnnou `isAuthenticated`.
+   */
   setup() {
     const { isAuthenticated } = useAuth0();
     return { isAuthenticated };

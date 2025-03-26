@@ -5,11 +5,15 @@ import Logout from "@/components/Logout.vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 
 /**
- * Vue.js component integrating Auth0 authentication with Card, Login, and Logout components.
+ * Hlavní komponenta domovské stránky systému pro inteligentní výdej obědů.
+ * Zahrnuje Auth0 autentizaci a zobrazuje odkazy na správu a výpis obědů.
  *
- * :returns: Object containing authentication state and registered components.
+ * @component
+ * @name HomePage
+ * @returns {Object} Vrací objekt s proměnnou `isAuthenticated` ze systému Auth0.
  */
 export default {
+  name: "HomePage",
   components: {
     Card,
     Login,

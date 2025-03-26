@@ -1,31 +1,37 @@
 <template>
-    <div>
-      <button @click="logout" class="logout-btn">Odhlásit</button>
-    </div>
-  </template>
-  <script>
+  <div>
+    <button @click="logout" class="logout-btn">Odhlásit</button>
+  </div>
+</template>
+
+<script>
 import { useAuth0 } from '@auth0/auth0-vue';
 
 export default {
+  name: "LogoutButton",
+
   /**
-   * Vue.js component handling user logout with Auth0.
+   * Setup funkce komponenty pro odhlašování uživatele pomocí Auth0.
    *
-   * :returns: Logout function to terminate Auth0 session and redirect user.
+   * @function logout
+   * @description Ukončí relaci uživatele a přesměruje jej zpět na domovskou stránku.
+   * @returns {Object} Vrací objekt obsahující funkci `logout`.
    */
   setup() {
     const { logout } = useAuth0();
 
+    const logoutUser = () => {
+      logout({ logoutParams: { returnTo: window.location.origin } });
+    };
+
     return {
-      logout: () => {
-        logout({ logoutParams: { returnTo: window.location.origin } });
-      }
+      logout: logoutUser
     };
   }
 };
-  </script>
+</script>
 
 <style scoped>
-
 .logout-btn {
   top: 10px;
   left: 10px;

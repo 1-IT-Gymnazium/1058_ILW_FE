@@ -1,33 +1,35 @@
 <template>
-    <div>
-      <button @click="login" class="login-btn">Přihlásit
-      </button>
-    </div>
-  </template>
-  <script>
+  <div>
+    <button @click="login" class="login-btn">Přihlásit</button>
+  </div>
+</template>
+
+<script>
 import { useAuth0 } from '@auth0/auth0-vue';
 
 export default {
+  name: "LoginButton",
+
   /**
-   * Vue.js component handling user login with Auth0.
+   * Setup funkce komponenty pro přihlašování uživatele pomocí Auth0.
    *
-   * :returns: Login function to initiate Auth0 redirect authentication.
+   * @function login
+   * @description Vyvolá přesměrování na přihlašovací stránku pomocí `loginWithRedirect` z Auth0.
+   * @returns {Object} Vrací objekt obsahující funkci `login`.
    */
   setup() {
     const { loginWithRedirect } = useAuth0();
 
-    return {
-      login: () => {
-        loginWithRedirect();
-      }
+    const login = () => {
+      loginWithRedirect();
     };
+
+    return { login };
   }
 };
-
-  </script>
+</script>
 
 <style scoped>
-
 .login-btn {
   top: 10px;
   left: 10px;

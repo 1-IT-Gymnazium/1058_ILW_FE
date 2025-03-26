@@ -1,29 +1,41 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from 'vue-router';
 import Login from './components/Login.vue';
 import Logout from './components/Logout.vue';
 import { useAuth0 } from "@auth0/auth0-vue";
 
-const { isAuthenticated} = useAuth0();
+// Auth0 hook pro získání stavu autentizace
+const { isAuthenticated } = useAuth0();
 
+/**
+ * Hlavní navigační komponenta s odkazy a autentizací uživatele.
+ * Zobrazuje odkazy na různé stránky a tlačítka pro přihlášení/odhlášení.
+ *
+ * @component
+ * @name Navigation
+ */
 </script>
 
 <template>
   <header>
     <nav>
       <div class="nav-links">
+        <!-- Odkazy pro navigaci -->
         <RouterLink to="/">Domů</RouterLink>
         <RouterLink to="/lunchList">List obědů</RouterLink>
         <RouterLink to="/lunchManagement">Správa obědů</RouterLink>
-        <div v-if="!isAuthenticated" class="login-container" >
-        <Login />
+
+        <!-- Podmíněné zobrazení komponent Login/Logout na základě stavu autentizace -->
+        <div v-if="!isAuthenticated" class="login-container">
+          <Login />
         </div>
-        <div v-else class="login-container" >
-        <Logout/>
+        <div v-else class="login-container">
+          <Logout />
         </div>
-        </div>
+      </div>
     </nav>
   </header>
+  <!-- Zobrazení obsahu podle aktuální cesty -->
   <RouterView />
 </template>
 
@@ -44,11 +56,10 @@ nav {
 }
 
 /* Odkazy v navigaci */
-.nav-links  {
+.nav-links {
   display: flex;
   align-items: center;
   justify-content: center;
-  display: flex;
   gap: 25px; /* Přiměřená mezera mezi odkazy */
 }
 
@@ -69,7 +80,8 @@ nav {
   transform: scale(1.05); /* Mírné zvětšení */
 }
 
-.login-container{
+/* Pravý box pro přihlášení/odhlášení */
+.login-container {
   float: right;
 }
 </style>

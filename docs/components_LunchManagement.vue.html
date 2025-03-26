@@ -1,4 +1,32 @@
-<script setup>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/LunchManagement.vue</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/LunchManagement.vue</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;script>
 import { ref, onMounted } from "vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 
@@ -14,7 +42,7 @@ const donationMessage = ref("Darování jídla je nezvratná akce");
  * Načte údaje o aktuálně přihlášeném uživateli z backendu pomocí Auth0 `user.name`.
  * Získané údaje se použijí k načtení informací o dnešním jídle.
  *
- * @returns {Promise<void>} Načte a nastaví `mealId`, `mealName`, `mealNumber`.
+ * @returns {Promise&lt;void>} Načte a nastaví `mealId`, `mealName`, `mealNumber`.
  * @throws {Error} Pokud selže komunikace s API nebo je odpověď neplatná.
  */
 const fetchUserData = async () => {
@@ -39,7 +67,7 @@ const fetchUserData = async () => {
 };
 
 onMounted(() => {
-  if (isAuthenticated.value && user.value) {
+  if (isAuthenticated.value &amp;&amp; user.value) {
     fetchUserData();
   }
 });
@@ -48,7 +76,7 @@ onMounted(() => {
  * Aktualizuje objednávku na serveru tak, aby odpovídala stavu darovaného jídla.
  *
  * @param {number} user_id - ID uživatele, kterému je jídlo darováno.
- * @returns {Promise<void>} Provede požadavek typu PUT a aktualizuje stav objednávky.
+ * @returns {Promise&lt;void>} Provede požadavek typu PUT a aktualizuje stav objednávky.
  * @throws {Error} Pokud dojde k chybě při komunikaci se serverem.
  */
 const updateOrder = async (user_id) => {
@@ -78,7 +106,7 @@ const updateOrder = async (user_id) => {
  * Spustí proces darování oběda jinému studentovi podle jeho čísla.
  * Ověří vstup, získá jeho ID z API a zavolá `updateOrder`.
  *
- * @returns {Promise<void>} Po úspěšném darování zobrazí zprávu, jinak chybu.
+ * @returns {Promise&lt;void>} Po úspěšném darování zobrazí zprávu, jinak chybu.
  * @throws {Error} Pokud selže komunikace se serverem nebo vstup není validní.
  */
 const donateMeal = async () => {
@@ -99,27 +127,27 @@ const donateMeal = async () => {
     donationMessage.value = "Nastala chyba při darování jídla.";
   }
 };
-</script>
+&lt;/script>
 
-<template>
-  <div class="container">
-    <div class="background top-image"></div>
-    <div class="content">
-      <h1 class="meal-name">{{ mealName }}</h1>
-      <p class="meal-number">{{ mealNumber }}</p>
-      <div class="input-group">
-        <input v-model="studentNumber" type="text" placeholder="Číslo studenta" />
-        <button @click="donateMeal" class="donate-btn">Darovat dnešní oběd</button>
-      </div>
-      <p style="margin-top: 10px; font-size: 14px; color: gray;">
+&lt;template>
+  &lt;div class="container">
+    &lt;div class="background top-image">&lt;/div>
+    &lt;div class="content">
+      &lt;h1 class="meal-name">{{ mealName }}&lt;/h1>
+      &lt;p class="meal-number">{{ mealNumber }}&lt;/p>
+      &lt;div class="input-group">
+        &lt;input v-model="studentNumber" type="text" placeholder="Číslo studenta" />
+        &lt;button @click="donateMeal" class="donate-btn">Darovat dnešní oběd&lt;/button>
+      &lt;/div>
+      &lt;p style="margin-top: 10px; font-size: 14px; color: gray;">
         {{ donationMessage }}
-      </p>
-    </div>
-    <div class="background bottom-image"></div>
-  </div>
-</template>
+      &lt;/p>
+    &lt;/div>
+    &lt;div class="background bottom-image">&lt;/div>
+  &lt;/div>
+&lt;/template>
 
-<style scoped>
+&lt;style scoped>
 .container {
   display: flex;
   flex-direction: column;
@@ -145,7 +173,7 @@ const donateMeal = async () => {
 .bottom-image {
   bottom: 0;
   height: 20vh;
-  background-image: url('https://images.pexels.com/photos/1213859/pexels-photo-1213859.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+  background-image: url('https://images.pexels.com/photos/1213859/pexels-photo-1213859.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1260&amp;h=750&amp;dpr=2');
 }
 
 .content {
@@ -224,4 +252,27 @@ const donateMeal = async () => {
     padding: 20px;
   }
 }
-</style>
+&lt;/style>
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#HomePage">HomePage</a></li><li><a href="global.html#LunchListView">LunchListView</a></li><li><a href="global.html#Navigation">Navigation</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#component">component</a></li><li><a href="global.html#donateMeal">donateMeal</a></li><li><a href="global.html#fetchMealData">fetchMealData</a></li><li><a href="global.html#fetchUserData">fetchUserData</a></li><li><a href="global.html#handleKeyPress">handleKeyPress</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#router">router</a></li><li><a href="global.html#updateOrder">updateOrder</a></li><li><a href="global.html#updateOrderStatus">updateOrderStatus</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Mar 26 2025 19:19:50 GMT+0100 (středoevropský standardní čas)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

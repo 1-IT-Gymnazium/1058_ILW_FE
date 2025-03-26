@@ -7,9 +7,12 @@ import App from './App.vue';
 import router from './router';
 
 /**
- * Initializes and configures the Vue.js application with Pinia store, Auth0 authentication, and router.
+ * Inicializuje a konfiguruje Vue.js aplikaci s Pinia store, Auth0 autentizací a routerem.
+ * Aplikace je následně připojena k DOM elementu s ID `#app`.
  *
- * :returns: Mounted Vue.js application instance.
+ * @function
+ * @description Vytváří aplikaci, používá Auth0 pro autentizaci, Pinia pro stav a router pro navigaci.
+ * @returns {Vue} Vrací nainicializovanou a připojenou Vue aplikaci.
  */
 const app = createApp(App);
 
